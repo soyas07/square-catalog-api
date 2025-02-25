@@ -1,0 +1,37 @@
+version: 2
+updates:
+  # 1. Update only production dependencies (Excludes devDependencies)
+  - package-ecosystem: "npm"
+    directory: "/" # Root directory
+    schedule:
+      interval: "weekly" # Change to "daily" if you want faster updates
+    open-pull-requests-limit: 3 # Limit open PRs to avoid spam
+    versioning-strategy: "auto" # Auto applies minor/patch updates, avoids unnecessary major updates
+    labels:
+      - "dependencies"
+      - "npm"
+    allow:
+      - dependency-type: "production" # Only update production dependencies
+    ignore:
+      - dependency-name: "express" # Example: Avoid major updates for Express (remove if you want them)
+        update-types: ["version-update:semver-major"]
+  
+  # 2. Security updates (Immediate updates for vulnerabilities)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily" # Security updates should be applied ASAP
+    open-pull-requests-limit: 5
+    labels:
+      - "security"
+    allow:
+      - dependency-type: "production" # Only security updates for production dependencies
+
+  # 3. GitHub Actions updates (if using CI/CD)
+  - package-ecosystem: "github-actions"
+    directory: "/" # Root directory for workflow files
+    schedule:
+      interval: "weekly"
+    labels:
+      - "ci"
+      - "dependencies"

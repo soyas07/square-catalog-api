@@ -1,0 +1,41 @@
+{
+  "type": "module",
+  "name": "squarecatalogapi",
+  "version": "0.1.1",
+  "description": "Square Catalog API to handle categories, items and orders",
+  "main": "server.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development nodemon src/server.js",
+    "start": "cross-env NODE_ENV=production node src/server.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --ext .js,.ts --fix",
+    "prisma:sync": "npx prisma introspect",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:migrateprod": "dotenv -e .env.production npx prisma migrate deploy",
+    "generate-readme": "npx readme-md-generator -y"
+  },
+  "author": "Soyas",
+  "license": "ISC",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-node": "^11.1.0",
+    "nodemon": "^3.1.9"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.4.1",
+    "ajv": "^8.17.1",
+    "axios": "^1.7.9",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "morgan": "^1.10.0",
+    "prisma": "^6.4.1",
+    "readme-md-generator": "^1.0.0",
+    "square": "^41.0.0",
+    "winston": "^3.17.0"
+  }
+}
