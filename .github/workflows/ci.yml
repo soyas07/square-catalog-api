@@ -58,7 +58,7 @@ jobs:
       - name: Deploy to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}  # Store this in GitHub secrets
-          HEROKU_APP_NAME: "your-heroku-app-name"
+          HEROKU_APP_NAME: "square-catalog-api"
         run: |
           echo "Deploying to Heroku..."
           heroku git:remote -a $HEROKU_APP_NAME
