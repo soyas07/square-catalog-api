@@ -64,6 +64,5 @@ jobs:
         run: |
           echo "Deploying to Heroku..."
           heroku git:remote -a $HEROKU_APP_NAME
-          git fetch --all --unshallow  # Ensure full clone before pushing
           git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git main
 
