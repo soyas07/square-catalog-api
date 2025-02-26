@@ -45,21 +45,25 @@ jobs:
           git push origin main
 
   deploy:
-    needs: ci  # This ensures deployment only happens if CI passes
+    needs: ci  # Ensures deployment happens only if CI passes
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # This prevents a shallow clone
 
       - name: Install Heroku CLI
         run: curl https://cli-assets.heroku.com/install.sh | sh
 
       - name: Deploy to Heroku
         env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}  # Store this in GitHub secrets
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           HEROKU_APP_NAME: "square-catalog-api"
         run: |
           echo "Deploying to Heroku..."
           heroku git:remote -a $HEROKU_APP_NAME
+          git fetch --all --unshallow  # Ensure full clone before pushing
           git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git main
+
