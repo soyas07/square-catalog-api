@@ -1,14 +1,12 @@
-import express, { json } from 'express'
+import express from 'express'
 import logger from '../middlewares/logger.js'
 import { square } from '../square.js'
 import { SquareError } from 'square'
 import { validateSquareResponse } from '../utils/utils.js'
 import prisma, { createOrUpdateRecordsInTable } from '../utils/db.js'
-import { validateCategoriesDeleteSchema, validateCategoriesPatchSchema, validateItemsPutSchema } from '../utils/schema.js'
 import { fetchImageObjects } from '../utils/helper.js'
 
 const router = express.Router()
-
 
 router.get('/', async (req, res) => {
   try {
@@ -115,9 +113,7 @@ router.get('/', async (req, res) => {
 //         },
 //       })),
 //     };
-    
 
-    
 //     logger.info(`Request payload body: ${JSON.stringify(requestBody)}`)
 
 //     const response = await square.catalog.object.upsert({
@@ -253,65 +249,65 @@ router.post('/update', async (req, res) => {
     const response =
                 await square.catalog.search({
                   objectTypes: ['ITEM']
-                });
+                })
 
     // validate square response
-    const validatedResponse = validateSquareResponse(response);
+    const validatedResponse = validateSquareResponse(response)
 
-    let data = [];
-    let variationData = [];
+    const data = []
+    const variationData = []
 
     for (const item of validatedResponse.objects) {
-      let itemImages = [];
+      let itemImages = []
 
       if (item.itemData.imageIds) {
-            logger.info(`Getting list of item images: ${item.itemData.imageIds}`);
-  
-            // Fetch image URLs
-            itemImages = await fetchImageObjects(item.itemData.imageIds);
+        logger.info(`Getting list of item images: ${item.itemData.imageIds}`)
+
+        // Fetch image URLs
+        itemImages = await fetchImageObjects(item.itemData.imageIds)
       }
 
       // Store item details
       data.push({
-          item_id: item.id,
-          item_name: item.itemData.name,
-          item_image: (Array.isArray(itemImages) && itemImages.length === 0) ? null : JSON.stringify(itemImages),
-          item_description: item.itemData.descriptionHtml,
-          location_id: item.presentAtLocationIds ? item.presentAtLocationIds[0] : null
-      });
+        item_id: item.id,
+        item_name: item.itemData.name,
+        item_image: (Array.isArray(itemImages) && itemImages.length === 0) ? null : JSON.stringify(itemImages),
+        item_description: item.itemData.descriptionHtml,
+        location_id: item.presentAtLocationIds ? item.presentAtLocationIds[0] : null
+      })
 
       for (const variation of item.itemData.variations) {
-          let images = [];
-          if (variation.itemVariationData.imageIds) {
-            logger.info(`Getting list of item variation images: ${variation.itemVariationData.imageIds}`);
-  
-            // Fetch image URLs
-            images = await fetchImageObjects(variation.itemVariationData.imageIds);
-          }
+        let images = []
+        if (variation.itemVariationData.imageIds) {
+          logger.info(`Getting list of item variation images: ${variation.itemVariationData.imageIds}`)
 
-          variationData.push({
-              variation_id: variation.id,
-              item_id: variation.itemVariationData.itemId,
-              variation_name: variation.itemVariationData.name,
-              variation_price: variation.itemVariationData.priceMoney.amount,
-              variation_image: JSON.stringify(images) // Store array of {id, url} objects
-          });
+          // Fetch image URLs
+          images = await fetchImageObjects(variation.itemVariationData.imageIds)
+        }
+
+        variationData.push({
+          variation_id: variation.id,
+          item_id: variation.itemVariationData.itemId,
+          variation_name: variation.itemVariationData.name,
+          variation_price: variation.itemVariationData.priceMoney.amount,
+          variation_image: JSON.stringify(images) // Store array of {id, url} objects
+        })
       }
     }
 
-    logger.info('Truncating the table items');
-    await prisma.items.deleteMany();
-    logger.info('Truncating the table items_variations');
-    await prisma.item_variations.deleteMany();
+    logger.info('Truncating the table items')
+    await prisma.items.deleteMany()
+    logger.info('Truncating the table items_variations')
+    await prisma.item_variations.deleteMany()
 
-    logger.info('Item Table truncated successfully');
-    logger.info('Item_Variations Table truncated successfully');
+    logger.info('Item Table truncated successfully')
+    logger.info('Item_Variations Table truncated successfully')
 
-    await createOrUpdateRecordsInTable(data, 'items', 'item_id');
-    await createOrUpdateRecordsInTable(variationData, 'item_variations', 'variation_id');
+    await createOrUpdateRecordsInTable(data, 'items', 'item_id')
+    await createOrUpdateRecordsInTable(variationData, 'item_variations', 'variation_id')
 
     res.status(204).send({
-      success: true,
+      success: true
     })
   } catch (ex) {
     if (ex instanceof SquareError) {

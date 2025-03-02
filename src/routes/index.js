@@ -9,6 +9,6 @@ router.get('/', (req, res) => {
 })
 
 router.use('/v1/categories', categoryRoutes)
-router.use('/v1/items', itemsRoutes);
+router.use('/v1/items', itemsRoutes)
 
 export default router

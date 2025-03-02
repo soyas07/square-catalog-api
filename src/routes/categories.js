@@ -217,14 +217,14 @@ router.post('/update', async (req, res) => {
     const data = validatedResponse.objects.map(category => ({
       category_id: category.id,
       category_name: category.categoryData.name
-    }));
+    }))
 
-    logger.info('Truncating the table categories');
-    await prisma.categories.deleteMany();
+    logger.info('Truncating the table categories')
+    await prisma.categories.deleteMany()
 
-    logger.info('Categories Table truncated successfully');
+    logger.info('Categories Table truncated successfully')
 
-    const result = await createOrUpdateRecordsInTable(data, 'categories', 'category_id');
+    const result = await createOrUpdateRecordsInTable(data, 'categories', 'category_id')
 
     res.status(204).send({
       success: true,
