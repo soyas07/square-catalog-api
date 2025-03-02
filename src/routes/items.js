@@ -10,10 +10,20 @@ const router = express.Router()
 
 router.get('/', async (req, res) => {
   try {
-    const { name } = req.query
+    const { name, location_id } = req.query
     console.log(req.query)
 
     let result
+    if (location_id) {
+      // if location id is provided then search for specific location
+      const items = await prisma.items.findMany({
+        where: {
+          location_id
+        }
+      })
+
+      if (items) { return res.send({ success: true, data: items }) }
+    }
 
     if (name) {
       // If an id is provided, search for that specific category
@@ -273,7 +283,8 @@ router.post('/update', async (req, res) => {
         item_name: item.itemData.name,
         item_image: (Array.isArray(itemImages) && itemImages.length === 0) ? null : JSON.stringify(itemImages),
         item_description: item.itemData.descriptionHtml,
-        location_id: item.presentAtLocationIds ? item.presentAtLocationIds[0] : null
+        location_id: item.presentAtLocationIds ? item.presentAtLocationIds[0] : null,
+        category_id: item.itemData.categories ? item.itemData.categories[0].id : null
       })
 
       for (const variation of item.itemData.variations) {

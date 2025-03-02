@@ -10,13 +10,27 @@ const router = express.Router()
 
 router.get('/', async (req, res) => {
   try {
-    const { name } = req.query
+    const { name, id } = req.query
     console.log(req.query)
 
     let result
 
+    if (id) {
+        // If an id is provided, search for that specific category
+        logger.info(`Getting category id: ${id}`)
+
+        // check database before calling the API
+        const category = await prisma.categories.findFirst({
+            where: {
+                category_id: id
+            }
+        })
+
+        if (category) { return res.send({ success: true, data: category }) }
+    }
+
     if (name) {
-      // If an id is provided, search for that specific category
+      // If name is provided, search for that specific category
       logger.info(`Getting category: ${name}`)
 
       // check database before calling the API
