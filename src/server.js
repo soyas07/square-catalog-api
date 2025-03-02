@@ -18,9 +18,6 @@ app.use(express.urlencoded({ extended: true }))
 
 // Routes
 app.use('/api', routes)
-// app.get('/api/v1/categories', (req, res) => {
-//     res.send({ msg: 'working' });
-// })
 
 // Server Start
 app.listen(config.port, async () => {

@@ -117,7 +117,7 @@ router.put('/', async (req, res) => {
       res.status(500).send({ error: 'Error from Square API' })
     } else {
       // General error handling
-      logger.error(`Error getting categories from the store: ${ex}`)
+      logger.error(`Error creating categories in the store: ${ex}`)
       res.status(500).json({ error: 'Internal server error' })
     }
   }
@@ -145,7 +145,7 @@ router.delete('/', async (req, res) => {
       res.status(500).send({ error: 'Error from Square API' })
     } else {
       // General error handling
-      logger.error(`Error getting categories from the store: ${ex}`)
+      logger.error(`Error deleting categories from the store: ${ex}`)
       res.status(500).json({ error: 'Internal server error' })
     }
   }
@@ -197,7 +197,7 @@ router.patch('/', async (req, res) => {
       res.status(500).send({ error: 'Error from Square API' })
     } else {
       // General error handling
-      logger.error(`Error getting categories from the store: ${ex}`)
+      logger.error(`Error updating categories from the store: ${ex}`)
       res.status(500).json({ error: 'Internal server error' })
     }
   }
@@ -217,14 +217,14 @@ router.post('/update', async (req, res) => {
     const data = validatedResponse.objects.map(category => ({
       category_id: category.id,
       category_name: category.categoryData.name
-    }))
+    }));
 
-    const result = await createOrUpdateRecordsInTable(data, 'categories', 'category_id')
+    logger.info('Truncating the table categories');
+    await prisma.categories.deleteMany();
 
-    logger.info('Truncating the table categories')
-    await prisma.categories.deleteMany()
+    logger.info('Categories Table truncated successfully');
 
-    logger.info('Categories Table truncated successfully')
+    const result = await createOrUpdateRecordsInTable(data, 'categories', 'category_id');
 
     res.status(204).send({
       success: true,
@@ -236,7 +236,7 @@ router.post('/update', async (req, res) => {
       res.status(500).send({ error: 'Error from Square API' })
     } else {
       // General error handling
-      logger.error(`Error getting categories from the store: ${ex}`)
+      logger.error(`Error updating categories table in the DB: ${ex}`)
       res.status(500).json({ error: 'Internal server error' })
     }
   }

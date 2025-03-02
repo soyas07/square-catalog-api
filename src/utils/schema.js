@@ -51,3 +51,29 @@ const categoriesPatchSchema = {
 export const validateCategoriesPutSchema = ajv.compile(categoriesPutSchema)
 export const validateCategoriesDeleteSchema = ajv.compile(categoriesDeleteSchema)
 export const validateCategoriesPatchSchema = ajv.compile(categoriesPatchSchema)
+
+
+const itemsPutSchema = {
+    type: 'object', // Define that the root object is an object
+    properties: {
+      idempotencyKey: { type: 'string' },
+      objects: {
+        type: 'array', // Define objects as an array
+        items: { // Describe the schema of each item in the array
+          type: 'object', // Each item is an object
+          properties: {
+            id: { type: 'string' },
+            name: { type: 'string' },
+            categoryIds: {
+                type: 'array',
+                items: { type: 'string' }
+            }
+          },
+          required: ['id', 'name'] // Optionally, specify required properties
+        }
+      }
+    },
+    required: ['idempotencyKey', 'objects'] // Specify required properties for the root object
+}
+
+export const validateItemsPutSchema = ajv.compile(itemsPutSchema)

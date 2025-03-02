@@ -7,25 +7,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model categories {
-  id                   Int      @id @default(autoincrement())
-  category_id          String   @unique(map: "category_id") @db.VarChar(36)
-  category_name        String   @db.VarChar(255)
-  category_description String?  @db.Text
-  last_update          DateTime @default(now()) @db.Timestamp(0)
-  items                items[]
+model items {
+  id               Int      @id @default(autoincrement())
+  item_id          String   @unique(map: "item_id") @db.VarChar(255)
+  item_name        String   @db.VarChar(255)
+  item_description String?  @db.Text
+  item_image       String?  @db.Text
+  location_id      String   @db.VarChar(255)
+  last_update      DateTime @default(now()) @db.DateTime(0)
 }
 
-model items {
-  id               Int         @id @default(autoincrement())
-  item_id          String      @unique(map: "item_id") @db.VarChar(36)
-  item_name        String      @db.VarChar(255)
-  item_description String?     @db.Text
-  item_price       Decimal     @db.Decimal(10, 2)
-  item_main_image  String?     @db.VarChar(255)
-  category_id      String?     @db.VarChar(36)
-  last_update      DateTime    @default(now()) @db.Timestamp(0)
-  categories       categories? @relation(fields: [category_id], references: [category_id], onUpdate: Restrict, map: "items_ibfk_1")
-
-  @@index([category_id], map: "category_id")
+model item_variations {
+  id                    Int      @id @default(autoincrement())
+  variation_id          String   @unique(map: "variation_id") @db.VarChar(255)
+  item_id               String   @db.VarChar(255)
+  variation_name        String   @db.VarChar(255)
+  variation_description String?  @db.Text
+  variation_price       Decimal? @db.Decimal(10, 2)
+  variation_image       String?  @db.Text
+  last_update           DateTime @default(now()) @db.Timestamp(0)
 }

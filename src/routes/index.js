@@ -1,5 +1,6 @@
 import express from 'express'
 import categoryRoutes from './categories.js'
+import itemsRoutes from './items.js'
 
 const router = express.Router({ strict: false })
 
@@ -8,5 +9,6 @@ router.get('/', (req, res) => {
 })
 
 router.use('/v1/categories', categoryRoutes)
+router.use('/v1/items', itemsRoutes);
 
 export default router
