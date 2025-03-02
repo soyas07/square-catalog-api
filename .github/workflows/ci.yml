@@ -21,11 +21,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Linter
-        run: npm run lint
-
       - name: Fix Linter Issues (if any)
         run: npm run lint:fix
+
+      - name: Run Linter
+        run: npm run lint
 
       - name: Commit and push changes
         env:

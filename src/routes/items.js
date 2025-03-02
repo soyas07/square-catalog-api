@@ -10,15 +10,15 @@ const router = express.Router()
 
 router.get('/', async (req, res) => {
   try {
-    const { name, location_id } = req.query
+    const { name, location } = req.query
     console.log(req.query)
 
     let result
-    if (location_id) {
+    if (location) {
       // if location id is provided then search for specific location
       const items = await prisma.items.findMany({
         where: {
-          location_id
+          location
         }
       })
 
