@@ -33,7 +33,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "json-bigint": "^1.0.0",
-    "morgan": "^1.10.0",
+    "morgan": "^1.10.1",
     "prisma": "^6.4.1",
     "readme-md-generator": "^1.0.0",
     "square": "^41.0.0",
